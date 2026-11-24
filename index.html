@@ -542,7 +542,8 @@ $('fPer').onchange=e=>{S.per=+e.target.value;renderAll()};
 $('segMap').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.mapView=b.dataset.v;[...$('segMap').children].forEach(x=>x.classList.toggle('on',x===b));renderTerr();postHeight()});
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderAll,120)});
 // altura automática cuando se inserta en WordPress con un iframe
-function postHeight(){try{parent.postMessage({vipolabHeight:document.documentElement.scrollHeight},'*')}catch(e){}}
+function postHeight(){try{parent.postMessage({vipolabHeight:Math.ceil(document.body.getBoundingClientRect().height)},'*')}catch(e){}}
+try{new ResizeObserver(()=>postHeight()).observe(document.body)}catch(e){}
 
 if(!DB){$('kpis').innerHTML='<p class="empty" style="grid-column:1/-1">Este archivo no tiene datos. Genérelo con construir_tablero.py.</p>';return}
 $('fInd').innerHTML=`<optgroup label="Tasas">${RATES.map(k=>`<option value="${k}">${IND[k].n}</option>`).join('')}</optgroup><optgroup label="Valores absolutos">${ABS.map(k=>`<option value="${k}">${IND[k].n}</option>`).join('')}</optgroup>`;
